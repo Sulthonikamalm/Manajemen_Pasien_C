@@ -1,0 +1,641 @@
+================================================================================
+        RANCANGAN SISTEM MANAJEMEN RUMAH SAKIT JIWA SULTHIM
+                    Desktop Application dengan GTK+
+================================================================================
+
+INFORMASI PROJECT
+================================================================================
+Nama Project    : Sistem Manajemen Rumah Sakit Jiwa SultHim
+Bahasa          : C
+GUI Library     : GTK+ 3
+Database        : CSV Files
+Platform        : Windows (Cross-platform ready)
+Semester        : 6
+
+
+FITUR UTAMA
+================================================================================
+
+1. MANAJEMEN PASIEN
+   - Create: Tambah data pasien baru
+   - Read: Lihat daftar & detail pasien
+   - Update: Edit data pasien
+   - Delete: Hapus data pasien (dengan konfirmasi)
+   
+   Data Pasien:
+   - ID Pasien (auto-increment)
+   - Nama Lengkap
+   - NIK
+   - Jenis Kelamin (Laki-laki/Perempuan)
+   - Tanggal Lahir / Usia
+   - Alamat Lengkap
+   - Nomor Telepon
+   - Riwayat Penyakit
+   - Tanggal Registrasi
+   - Status (Aktif/Tidak Aktif)
+
+   Fitur Tambahan:
+   - Search: Cari berdasarkan nama/NIK
+   - Filter: Filter berdasarkan jenis kelamin, status, usia
+   - Sorting: Urutkan berdasarkan nama, usia, tanggal registrasi
+   - Pagination: Tampilkan data per halaman (20 data/halaman)
+
+
+2. REKAM MEDIS PASIEN
+   - Tambah catatan kunjungan baru
+   - Lihat riwayat kunjungan per pasien
+   - Edit catatan kunjungan
+   - Hapus catatan kunjungan
+   
+   Data Rekam Medis:
+   - ID Rekam Medis (auto-increment)
+   - ID Pasien (foreign key)
+   - Tanggal Kunjungan
+   - Keluhan Utama
+   - Diagnosis
+   - Catatan Dokter
+   - Tindakan yang Dilakukan
+   - Tanggal Kontrol Berikutnya
+   
+   Fitur Tambahan:
+   - Timeline riwayat kunjungan
+   - Filter berdasarkan tanggal
+   - Print rekam medis per pasien
+
+
+3. RESEP OBAT
+   - Tambah resep untuk pasien
+   - Lihat riwayat resep per pasien
+   - Edit resep
+   - Hapus resep
+   
+   Data Resep:
+   - ID Resep (auto-increment)
+   - ID Pasien (foreign key)
+   - ID Rekam Medis (foreign key)
+   - Tanggal Resep
+   - Nama Obat
+   - Dosis (misal: 10mg, 2 tablet)
+   - Frekuensi (misal: 3x sehari, 2x sehari)
+   - Durasi (misal: 7 hari, 14 hari)
+   - Aturan Pakai (misal: Sesudah makan, Sebelum tidur)
+   - Catatan Khusus
+   
+   Fitur Tambahan:
+   - Multi-obat dalam satu resep
+   - Template obat umum (untuk input cepat)
+   - Print resep
+   - Riwayat resep per pasien
+
+
+4. DASHBOARD
+   - Statistik Real-time:
+     * Total Pasien Terdaftar
+     * Pasien Aktif
+     * Pasien Baru Bulan Ini
+     * Total Kunjungan Bulan Ini
+     * Total Resep Bulan Ini
+   
+   - Grafik:
+     * Grafik jumlah pasien per bulan (6 bulan terakhir)
+     * Grafik kunjungan per bulan
+     * Diagram pie: Pasien berdasarkan jenis kelamin
+   
+   - Quick Actions:
+     * Tambah Pasien Baru
+     * Lihat Daftar Pasien
+     * Tambah Rekam Medis
+     * Tambah Resep
+   
+   - Recent Activity:
+     * 5 Pasien terakhir terdaftar
+     * 5 Kunjungan terakhir
+
+
+5. EXPORT & PRINT
+   - Export Data Pasien ke CSV
+   - Export Rekam Medis ke CSV
+   - Export Resep ke CSV
+   - Print Data Pasien (dengan preview)
+   - Print Rekam Medis per Pasien
+   - Print Resep
+   - Print Laporan Statistik
+
+
+6. DARK MODE
+   - Toggle tema gelap/terang
+   - Simpan preferensi user di config file
+   - Smooth transition animation
+   - Custom color scheme:
+     
+     Light Mode:
+     - Background: #FFFFFF, #F5F7FA
+     - Text: #2C3E50
+     - Primary: #4A90E2
+     - Secondary: #7ED321
+     - Accent: #F5A623
+     
+     Dark Mode:
+     - Background: #1E1E1E, #2D2D30
+     - Text: #E0E0E0
+     - Primary: #5BA3F5
+     - Secondary: #8FE63D
+     - Accent: #FFB84D
+
+
+STRUKTUR DATABASE (CSV FILES)
+================================================================================
+
+1. pasien.csv
+   Format: id,nama,nik,jenis_kelamin,tanggal_lahir,alamat,telepon,riwayat_penyakit,tanggal_registrasi,status
+
+2. rekam_medis.csv
+   Format: id,id_pasien,tanggal_kunjungan,keluhan,diagnosis,catatan_dokter,tindakan,tanggal_kontrol
+
+3. resep.csv
+   Format: id,id_pasien,id_rekam_medis,tanggal_resep,nama_obat,dosis,frekuensi,durasi,aturan_pakai,catatan
+
+4. config.csv
+   Format: key,value
+   Contoh: theme,dark
+
+
+STRUKTUR PROJECT
+================================================================================
+
+project/
+│
+├── src/
+│   ├── main.c                  # Entry point & GTK initialization
+│   ├── gui/
+│   │   ├── window.c            # Main window
+│   │   ├── window.h
+│   │   ├── dashboard.c         # Dashboard view
+│   │   ├── dashboard.h
+│   │   ├── pasien_view.c       # Pasien management view
+│   │   ├── pasien_view.h
+│   │   ├── rekam_medis_view.c  # Rekam medis view
+│   │   ├── rekam_medis_view.h
+│   │   ├── resep_view.c        # Resep view
+│   │   ├── resep_view.h
+│   │   ├── theme.c             # Theme manager (dark/light)
+│   │   └── theme.h
+│   │
+│   ├── models/
+│   │   ├── pasien.c            # Pasien struct & functions
+│   │   ├── pasien.h
+│   │   ├── rekam_medis.c       # Rekam medis struct & functions
+│   │   ├── rekam_medis.h
+│   │   ├── resep.c             # Resep struct & functions
+│   │   └── resep.h
+│   │
+│   ├── utils/
+│   │   ├── csv_handler.c       # CSV read/write functions
+│   │   ├── csv_handler.h
+│   │   ├── validator.c         # Input validation
+│   │   ├── validator.h
+│   │   ├── date_utils.c        # Date formatting & parsing
+│   │   ├── date_utils.h
+│   │   ├── string_utils.c      # String manipulation
+│   │   └── string_utils.h
+│   │
+│   └── config/
+│       ├── config.c            # Configuration manager
+│       └── config.h
+│
+├── data/
+│   ├── pasien.csv
+│   ├── rekam_medis.csv
+│   ├── resep.csv
+│   └── config.csv
+│
+├── assets/
+│   ├── styles/
+│   │   ├── light.css           # Light theme CSS
+│   │   └── dark.css            # Dark theme CSS
+│   │
+│   └── icons/
+│       ├── logo.png
+│       ├── patient.png
+│       ├── medical.png
+│       ├── prescription.png
+│       └── dashboard.png
+│
+├── docs/
+│   └── RANCANGAN_PROJECT.txt   # File ini
+│
+├── Makefile                     # Build configuration
+└── README.txt                   # Dokumentasi project
+
+
+DESAIN UI/UX
+================================================================================
+
+LAYOUT UTAMA:
+┌─────────────────────────────────────────────────────────────┐
+│  [Logo] Rumah Sakit Jiwa SultHim          [Theme] [User]   │
+├──────────┬──────────────────────────────────────────────────┤
+│          │                                                  │
+│ SIDEBAR  │           MAIN CONTENT AREA                     │
+│          │                                                  │
+│ Dashboard│                                                  │
+│ Pasien   │                                                  │
+│ Rekam    │                                                  │
+│ Resep    │                                                  │
+│ Export   │                                                  │
+│          │                                                  │
+│          │                                                  │
+├──────────┴──────────────────────────────────────────────────┤
+│  Status Bar: Ready | Total Pasien: 150 | Theme: Light      │
+└─────────────────────────────────────────────────────────────┘
+
+
+DASHBOARD VIEW:
+┌─────────────────────────────────────────────────────────────┐
+│  Dashboard                                                  │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  │
+│  │  Total   │  │  Pasien  │  │ Kunjungan│  │  Resep   │  │
+│  │  Pasien  │  │   Baru   │  │   Bulan  │  │  Bulan   │  │
+│  │   150    │  │    12    │  │    45    │  │    38    │  │
+│  └──────────┘  └──────────┘  └──────────┘  └──────────┘  │
+│                                                             │
+│  ┌────────────────────────┐  ┌──────────────────────────┐ │
+│  │  Grafik Pasien/Bulan   │  │   Recent Activity        │ │
+│  │                        │  │                          │ │
+│  │   [Bar Chart]          │  │  • Pasien A terdaftar   │ │
+│  │                        │  │  • Kunjungan Pasien B   │ │
+│  │                        │  │  • Resep untuk Pasien C │ │
+│  └────────────────────────┘  └──────────────────────────┘ │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+
+
+PASIEN VIEW:
+┌─────────────────────────────────────────────────────────────┐
+│  Manajemen Pasien                                           │
+├─────────────────────────────────────────────────────────────┤
+│  [Search: ___________] [Filter ▼] [+ Tambah Pasien]       │
+├─────────────────────────────────────────────────────────────┤
+│  ID  │ Nama        │ Jenis Kelamin │ Usia │ Telepon │ Aksi│
+├──────┼─────────────┼───────────────┼──────┼─────────┼─────┤
+│  001 │ Ahmad S.    │ Laki-laki     │  35  │ 0812... │ ⚙️📝│
+│  002 │ Siti R.     │ Perempuan     │  28  │ 0813... │ ⚙️📝│
+│  003 │ Budi W.     │ Laki-laki     │  42  │ 0821... │ ⚙️📝│
+├──────┴─────────────┴───────────────┴──────┴─────────┴─────┤
+│  Showing 1-20 of 150        [< Prev] [1][2][3] [Next >]   │
+└─────────────────────────────────────────────────────────────┘
+
+
+FORM TAMBAH/EDIT PASIEN:
+┌─────────────────────────────────────────────────────────────┐
+│  Tambah Data Pasien                              [X]        │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Nama Lengkap:     [_____________________________]         │
+│  NIK:              [_____________________________]         │
+│  Jenis Kelamin:    ( ) Laki-laki  ( ) Perempuan           │
+│  Tanggal Lahir:    [__/__/____] [📅]                      │
+│  Alamat:           [_____________________________]         │
+│                    [_____________________________]         │
+│  Telepon:          [_____________________________]         │
+│  Riwayat Penyakit: [_____________________________]         │
+│                    [_____________________________]         │
+│                    [_____________________________]         │
+│                                                             │
+│              [Batal]              [Simpan]                 │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+
+
+REKAM MEDIS VIEW:
+┌─────────────────────────────────────────────────────────────┐
+│  Rekam Medis - Ahmad Syarif                                 │
+├─────────────────────────────────────────────────────────────┤
+│  [+ Tambah Catatan]                                         │
+├─────────────────────────────────────────────────────────────┤
+│  Timeline Kunjungan:                                        │
+│                                                             │
+│  ● 10 Feb 2026                                             │
+│    Keluhan: Sulit tidur, cemas berlebihan                  │
+│    Diagnosis: Gangguan Kecemasan Umum                      │
+│    Tindakan: Konseling, terapi relaksasi                   │
+│    [Lihat Detail] [Edit] [Hapus]                           │
+│                                                             │
+│  ● 03 Feb 2026                                             │
+│    Keluhan: Mood swing, sulit konsentrasi                  │
+│    Diagnosis: Episode Depresi Ringan                       │
+│    Tindakan: Psikoterapi                                   │
+│    [Lihat Detail] [Edit] [Hapus]                           │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+
+
+RESEP VIEW:
+┌─────────────────────────────────────────────────────────────┐
+│  Resep Obat - Ahmad Syarif                                  │
+├─────────────────────────────────────────────────────────────┤
+│  [+ Tambah Resep]                                           │
+├─────────────────────────────────────────────────────────────┤
+│  Tanggal: 10 Feb 2026                                       │
+│                                                             │
+│  Obat 1:                                                    │
+│  Nama Obat:    [Alprazolam 0.5mg___________]               │
+│  Dosis:        [1 tablet___________________]               │
+│  Frekuensi:    [2x sehari__________________]               │
+│  Durasi:       [14 hari____________________]               │
+│  Aturan Pakai: [Sesudah makan______________]               │
+│                                                             │
+│  [+ Tambah Obat Lain]                                       │
+│                                                             │
+│  Catatan Khusus:                                            │
+│  [_____________________________________________]            │
+│  [_____________________________________________]            │
+│                                                             │
+│              [Batal]    [Print]    [Simpan]                │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+
+
+COLOR SCHEME
+================================================================================
+
+LIGHT MODE:
+- Primary Color:     #4A90E2 (Soft Blue - Calming)
+- Secondary Color:   #7ED321 (Light Green - Healing)
+- Background:        #FFFFFF (White)
+- Surface:           #F5F7FA (Light Gray)
+- Text Primary:      #2C3E50 (Dark Gray)
+- Text Secondary:    #7F8C8D (Medium Gray)
+- Accent:            #F5A623 (Warm Orange)
+- Success:           #27AE60 (Green)
+- Warning:           #F39C12 (Orange)
+- Error:             #E74C3C (Red)
+- Border:            #E0E0E0 (Light Gray)
+
+DARK MODE:
+- Primary Color:     #5BA3F5 (Bright Blue)
+- Secondary Color:   #8FE63D (Bright Green)
+- Background:        #1E1E1E (Dark Gray)
+- Surface:           #2D2D30 (Medium Dark)
+- Text Primary:      #E0E0E0 (Light Gray)
+- Text Secondary:    #A0A0A0 (Medium Gray)
+- Accent:            #FFB84D (Bright Orange)
+- Success:           #2ECC71 (Bright Green)
+- Warning:           #F1C40F (Bright Yellow)
+- Error:             #E67E73 (Bright Red)
+- Border:            #3E3E42 (Dark Border)
+
+
+TYPOGRAPHY
+================================================================================
+- Header Font:   Sans-serif, Bold, 18-24px
+- Body Font:     Sans-serif, Regular, 12-14px
+- Button Font:   Sans-serif, Medium, 12px
+- Table Font:    Monospace, Regular, 11px
+
+
+VALIDASI INPUT
+================================================================================
+
+PASIEN:
+- Nama: Tidak boleh kosong, min 3 karakter, max 50 karakter
+- NIK: 16 digit angka
+- Jenis Kelamin: Harus dipilih
+- Tanggal Lahir: Format valid, tidak boleh masa depan
+- Alamat: Tidak boleh kosong, max 200 karakter
+- Telepon: 10-13 digit angka, format: 08xx atau +62
+- Riwayat Penyakit: Max 500 karakter
+
+REKAM MEDIS:
+- Tanggal Kunjungan: Format valid, tidak boleh masa depan
+- Keluhan: Tidak boleh kosong, max 500 karakter
+- Diagnosis: Tidak boleh kosong, max 200 karakter
+- Catatan Dokter: Max 1000 karakter
+
+RESEP:
+- Tanggal Resep: Format valid, tidak boleh masa depan
+- Nama Obat: Tidak boleh kosong, max 100 karakter
+- Dosis: Tidak boleh kosong, max 50 karakter
+- Frekuensi: Tidak boleh kosong, max 50 karakter
+- Durasi: Tidak boleh kosong, max 50 karakter
+
+
+FITUR KEAMANAN
+================================================================================
+- Input sanitization untuk mencegah CSV injection
+- Validasi tipe data
+- Konfirmasi sebelum delete
+- Backup otomatis setiap hari
+- Error handling yang baik
+- Log aktivitas (optional)
+
+
+TEKNOLOGI & LIBRARY
+================================================================================
+
+Core:
+- Bahasa: C (C11 Standard)
+- Compiler: GCC (MinGW untuk Windows)
+- Build System: Makefile
+
+GUI:
+- GTK+ 3.x
+- Cairo (untuk grafik)
+- Pango (untuk text rendering)
+
+Utilities:
+- Standard C Library (stdio, stdlib, string, time)
+- Custom CSV parser
+- Custom date/time utilities
+
+
+INSTALASI & DEPENDENCIES
+================================================================================
+
+Windows:
+1. Install MSYS2
+2. Install GTK+ 3: pacman -S mingw-w64-x86_64-gtk3
+3. Install GCC: pacman -S mingw-w64-x86_64-gcc
+4. Install Make: pacman -S make
+
+Build:
+1. Clone/extract project
+2. cd project/
+3. make
+4. ./bin/rumah_sakit_jiwa.exe
+
+
+ROADMAP DEVELOPMENT
+================================================================================
+
+Phase 1: Setup & Core Structure (Week 1)
+- Setup project structure
+- Implement CSV handler
+- Create data models (struct)
+- Basic CRUD functions
+
+Phase 2: GUI Foundation (Week 2)
+- GTK+ window setup
+- Main layout (sidebar + content)
+- Navigation system
+- Theme manager (light/dark)
+
+Phase 3: Pasien Module (Week 3)
+- Pasien view UI
+- Form tambah/edit pasien
+- Table display dengan pagination
+- Search & filter
+- Delete dengan konfirmasi
+
+Phase 4: Rekam Medis Module (Week 4)
+- Rekam medis view UI
+- Form tambah/edit rekam medis
+- Timeline display
+- Link dengan pasien
+
+Phase 5: Resep Module (Week 5)
+- Resep view UI
+- Form tambah/edit resep
+- Multi-obat support
+- Print resep
+
+Phase 6: Dashboard & Analytics (Week 6)
+- Dashboard UI
+- Statistik real-time
+- Grafik dengan Cairo
+- Recent activity
+
+Phase 7: Export & Print (Week 7)
+- Export to CSV
+- Print preview
+- Print formatting
+
+Phase 8: Polish & Testing (Week 8)
+- Bug fixing
+- UI/UX improvements
+- Performance optimization
+- Documentation
+- User testing
+
+
+TESTING PLAN
+================================================================================
+
+Unit Testing:
+- CSV handler functions
+- Data validation functions
+- Date utilities
+- String utilities
+
+Integration Testing:
+- CRUD operations
+- Search & filter
+- Sorting
+- Export functions
+
+UI Testing:
+- Form validation
+- Button actions
+- Navigation
+- Theme switching
+
+User Acceptance Testing:
+- End-to-end workflows
+- Usability testing
+- Performance testing
+
+
+DOKUMENTASI
+================================================================================
+
+User Manual:
+- Cara instalasi
+- Cara penggunaan setiap fitur
+- FAQ
+- Troubleshooting
+
+Developer Documentation:
+- Code structure
+- Function documentation
+- API reference
+- Build instructions
+
+
+CATATAN PENTING
+================================================================================
+
+1. Semua kode ditulis dalam bahasa C murni
+2. GTK+ 3 untuk GUI (bukan web-based)
+3. CSV untuk storage (simple & portable)
+4. Cross-platform ready (Windows, Linux, Mac)
+5. Modular & maintainable code
+6. Clean code principles
+7. Proper error handling
+8. Memory management (no memory leaks)
+9. User-friendly interface
+10. Professional & aesthetic design
+
+
+ESTIMASI WAKTU PENGERJAAN
+================================================================================
+Total: 8 minggu (2 bulan)
+- Setup & Planning: 3 hari
+- Development: 7 minggu
+- Testing & Polish: 1 minggu
+
+
+TARGET PENGGUNA
+================================================================================
+- Admin rumah sakit
+- Staff registrasi
+- Dokter/Psikiater
+- Perawat
+- Apoteker
+
+
+KEUNGGULAN SISTEM
+================================================================================
+1. Desktop native app (tidak perlu internet)
+2. Ringan & cepat
+3. Data tersimpan lokal (privacy)
+4. Interface modern & aesthetic
+5. Dark mode untuk kenyamanan mata
+6. Export & print ready
+7. Easy to use
+8. Cross-platform
+9. Open source (bisa dikembangkan)
+10. Tidak perlu database server
+
+
+LIMITASI
+================================================================================
+1. Single user (tidak multi-user concurrent)
+2. Tidak ada cloud sync
+3. Backup manual
+4. Tidak ada role-based access control
+5. Grafik sederhana (tidak real-time)
+
+
+FUTURE ENHANCEMENTS (Optional)
+================================================================================
+1. Multi-user dengan login system
+2. Role-based access control
+3. Cloud backup
+4. Mobile app companion
+5. Barcode/QR code untuk pasien
+6. SMS/Email notification
+7. Appointment reminder
+8. Inventory management obat
+9. Billing system
+10. Integration dengan BPJS
+
+
+================================================================================
+                            END OF DOCUMENT
+================================================================================
+
+Dibuat oleh: AI Assistant
+Tanggal: 10 Februari 2026
+Versi: 1.0
