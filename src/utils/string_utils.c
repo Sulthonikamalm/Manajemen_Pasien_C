@@ -1,125 +1,124 @@
 #include "string_utils.h"
 #include <string.h>
 #include <ctype.h>
-#include <stdio.h>
 
-// Trim whitespace dari awal dan akhir string
-void strTrim(char *str) {
+// Hapus spasi dari awal dan akhir string
+void rapikanString(char *str) {
     if (str == NULL) return;
     
-    // Trim leading whitespace
-    int start = 0;
-    while (str[start] && isspace((unsigned char)str[start])) {
-        start++;
+    // Hapus spasi di awal
+    int awal = 0;
+    while (str[awal] && isspace((unsigned char)str[awal])) {
+        awal++;
     }
     
-    // Trim trailing whitespace
-    int end = strlen(str) - 1;
-    while (end >= start && isspace((unsigned char)str[end])) {
-        end--;
+    // Hapus spasi di akhir
+    int akhir = strlen(str) - 1;
+    while (akhir >= awal && isspace((unsigned char)str[akhir])) {
+        akhir--;
     }
     
-    // Move trimmed string to beginning
+    // Pindahkan string yang sudah dirapikan ke awal
     int i;
-    for (i = 0; i <= end - start; i++) {
-        str[i] = str[start + i];
+    for (i = 0; i <= akhir - awal; i++) {
+        str[i] = str[awal + i];
     }
     str[i] = '\0';
 }
 
-// Convert string to lowercase
-void strToLower(char *str) {
+// Ubah string menjadi huruf kecil
+void keHurufKecil(char *str) {
     if (str == NULL) return;
     for (int i = 0; str[i]; i++) {
         str[i] = tolower((unsigned char)str[i]);
     }
 }
 
-// Convert string to uppercase
-void strToUpper(char *str) {
+// Ubah string menjadi huruf besar
+void keHurufBesar(char *str) {
     if (str == NULL) return;
     for (int i = 0; str[i]; i++) {
         str[i] = toupper((unsigned char)str[i]);
     }
 }
 
-// Capitalize first letter of each word
-void strCapitalize(char *str) {
+// Kapitalisasi huruf pertama setiap kata
+void kapitalisasiKata(char *str) {
     if (str == NULL) return;
     
-    bool newWord = true;
+    bool kataBaru = true;
     for (int i = 0; str[i]; i++) {
         if (isspace((unsigned char)str[i])) {
-            newWord = true;
-        } else if (newWord) {
+            kataBaru = true;
+        } else if (kataBaru) {
             str[i] = toupper((unsigned char)str[i]);
-            newWord = false;
+            kataBaru = false;
         } else {
             str[i] = tolower((unsigned char)str[i]);
         }
     }
 }
 
-// Check if string contains substring
-bool strContains(const char *haystack, const char *needle) {
-    if (haystack == NULL || needle == NULL) return false;
-    return strstr(haystack, needle) != NULL;
+// Cek apakah string mengandung substring
+bool mengandungString(const char *teksUtama, const char *teksYangDicari) {
+    if (teksUtama == NULL || teksYangDicari == NULL) return false;
+    return strstr(teksUtama, teksYangDicari) != NULL;
 }
 
-// Check if string starts with prefix
-bool strStartsWith(const char *str, const char *prefix) {
-    if (str == NULL || prefix == NULL) return false;
-    return strncmp(str, prefix, strlen(prefix)) == 0;
+// Cek apakah string dimulai dengan prefix
+bool dimulaiDengan(const char *str, const char *awalan) {
+    if (str == NULL || awalan == NULL) return false;
+    return strncmp(str, awalan, strlen(awalan)) == 0;
 }
 
-// Check if string ends with suffix
-bool strEndsWith(const char *str, const char *suffix) {
-    if (str == NULL || suffix == NULL) return false;
+// Cek apakah string diakhiri dengan suffix
+bool diakhiriDengan(const char *str, const char *akhiran) {
+    if (str == NULL || akhiran == NULL) return false;
     
-    int strLen = strlen(str);
-    int suffixLen = strlen(suffix);
+    int panjangStr = strlen(str);
+    int panjangAkhiran = strlen(akhiran);
     
-    if (suffixLen > strLen) return false;
+    if (panjangAkhiran > panjangStr) return false;
     
-    return strcmp(str + strLen - suffixLen, suffix) == 0;
+    return strcmp(str + panjangStr - panjangAkhiran, akhiran) == 0;
 }
 
-// Split string by delimiter
-int strSplit(char *str, char delimiter, char **tokens, int maxTokens) {
-    if (str == NULL || tokens == NULL) return 0;
+// Pisahkan string berdasarkan delimiter
+int pisahkanString(char *str, char pemisah, char **token, int maksToken) {
+    if (str == NULL || token == NULL) return 0;
     
-    int count = 0;
-    char *token = strtok(str, &delimiter);
+    int jumlah = 0;
+    char *bagian = strtok(str, &pemisah);
     
-    while (token != NULL && count < maxTokens) {
-        tokens[count++] = token;
-        token = strtok(NULL, &delimiter);
+    while (bagian != NULL && jumlah < maksToken) {
+        token[jumlah++] = bagian;
+        bagian = strtok(NULL, &pemisah);
     }
     
-    return count;
+    return jumlah;
 }
 
-// Replace character in string
-void strReplace(char *str, char find, char replace) {
+// Ganti karakter dalam string
+void gantiKarakter(char *str, char cari, char ganti) {
     if (str == NULL) return;
     
     for (int i = 0; str[i]; i++) {
-        if (str[i] == find) {
-            str[i] = replace;
+        if (str[i] == cari) {
+            str[i] = ganti;
         }
     }
 }
 
-// Safe string copy
-void strCopy(char *dest, const char *src, int maxLen) {
-    if (dest == NULL || src == NULL) return;
+// Salin string dengan aman
+void salinString(char *tujuan, const char *sumber, int maksPanjang) {
+    if (tujuan == NULL || sumber == NULL) return;
     
-    strncpy(dest, src, maxLen - 1);
-    dest[maxLen - 1] = '\0';
+    strncpy(tujuan, sumber, maksPanjang - 1);
+    tujuan[maksPanjang - 1] = '\0';
 }
 
-// Case-insensitive string comparison
-int strCompareIgnoreCase(const char *str1, const char *str2) {
+// Bandingkan string tanpa memperhatikan huruf besar/kecil
+int bandingkanStringIgnoreCase(const char *str1, const char *str2) {
     if (str1 == NULL || str2 == NULL) return -1;
     
     while (*str1 && *str2) {

@@ -3,122 +3,122 @@
 #include <string.h>
 #include <stdlib.h>
 
-// Get current date in DD/MM/YYYY format
-void getCurrentDate(char *buffer, int size) {
-    time_t now = time(NULL);
-    struct tm *t = localtime(&now);
-    snprintf(buffer, size, "%02d/%02d/%04d", t->tm_mday, t->tm_mon + 1, t->tm_year + 1900);
+// Dapatkan tanggal saat ini dalam format DD/MM/YYYY
+void dapatkanTanggalSekarang(char *buffer, int ukuran) {
+    time_t sekarang = time(NULL);
+    struct tm *t = localtime(&sekarang);
+    snprintf(buffer, ukuran, "%02d/%02d/%04d", t->tm_mday, t->tm_mon + 1, t->tm_year + 1900);
 }
 
-// Format date to DD/MM/YYYY
-void formatDate(char *buffer, int size, int day, int month, int year) {
-    snprintf(buffer, size, "%02d/%02d/%04d", day, month, year);
+// Format tanggal ke DD/MM/YYYY
+void formatTanggal(char *buffer, int ukuran, int hari, int bulan, int tahun) {
+    snprintf(buffer, ukuran, "%02d/%02d/%04d", hari, bulan, tahun);
 }
 
-// Parse date string DD/MM/YYYY
-bool parseDate(const char *dateStr, int *day, int *month, int *year) {
-    if (dateStr == NULL) return false;
-    return sscanf(dateStr, "%d/%d/%d", day, month, year) == 3;
+// Parse string tanggal DD/MM/YYYY
+bool parseTanggal(const char *stringTanggal, int *hari, int *bulan, int *tahun) {
+    if (stringTanggal == NULL) return false;
+    return sscanf(stringTanggal, "%d/%d/%d", hari, bulan, tahun) == 3;
 }
 
-// Check if leap year
-bool isLeapYear(int year) {
-    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+// Cek apakah tahun kabisat
+bool adalahTahunKabisat(int tahun) {
+    return (tahun % 4 == 0 && tahun % 100 != 0) || (tahun % 400 == 0);
 }
 
-// Get days in month
-int getDaysInMonth(int month, int year) {
-    int days[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+// Dapatkan jumlah hari dalam bulan
+int dapatkanJumlahHariDalamBulan(int bulan, int tahun) {
+    int hari[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     
-    if (month < 1 || month > 12) return 0;
+    if (bulan < 1 || bulan > 12) return 0;
     
-    if (month == 2 && isLeapYear(year)) {
+    if (bulan == 2 && adalahTahunKabisat(tahun)) {
         return 29;
     }
     
-    return days[month - 1];
+    return hari[bulan - 1];
 }
 
-// Validate date
-bool isValidDate(int day, int month, int year) {
-    if (year < 1900 || year > 2100) return false;
-    if (month < 1 || month > 12) return false;
-    if (day < 1 || day > getDaysInMonth(month, year)) return false;
+// Validasi tanggal
+bool adalahTanggalValid(int hari, int bulan, int tahun) {
+    if (tahun < 1900 || tahun > 2100) return false;
+    if (bulan < 1 || bulan > 12) return false;
+    if (hari < 1 || hari > dapatkanJumlahHariDalamBulan(bulan, tahun)) return false;
     return true;
 }
 
-// Calculate age from birth date
-int calculateAge(const char *birthDate) {
-    int day, month, year;
-    if (!parseDate(birthDate, &day, &month, &year)) {
+// Hitung usia dari tanggal lahir
+int hitungUsia(const char *tanggalLahir) {
+    int hari, bulan, tahun;
+    if (!parseTanggal(tanggalLahir, &hari, &bulan, &tahun)) {
         return -1;
     }
     
-    time_t now = time(NULL);
-    struct tm *t = localtime(&now);
+    time_t sekarang = time(NULL);
+    struct tm *t = localtime(&sekarang);
     
-    int currentYear = t->tm_year + 1900;
-    int currentMonth = t->tm_mon + 1;
-    int currentDay = t->tm_mday;
+    int tahunSekarang = t->tm_year + 1900;
+    int bulanSekarang = t->tm_mon + 1;
+    int hariSekarang = t->tm_mday;
     
-    int age = currentYear - year;
+    int usia = tahunSekarang - tahun;
     
-    if (currentMonth < month || (currentMonth == month && currentDay < day)) {
-        age--;
+    if (bulanSekarang < bulan || (bulanSekarang == bulan && hariSekarang < hari)) {
+        usia--;
     }
     
-    return age;
+    return usia;
 }
 
-// Compare two dates (returns -1 if date1 < date2, 0 if equal, 1 if date1 > date2)
-int compareDates(const char *date1, const char *date2) {
-    int d1, m1, y1, d2, m2, y2;
+// Bandingkan dua tanggal (return -1 jika tanggal1 < tanggal2, 0 jika sama, 1 jika tanggal1 > tanggal2)
+int bandingkanTanggal(const char *tanggal1, const char *tanggal2) {
+    int h1, b1, t1, h2, b2, t2;
     
-    if (!parseDate(date1, &d1, &m1, &y1) || !parseDate(date2, &d2, &m2, &y2)) {
+    if (!parseTanggal(tanggal1, &h1, &b1, &t1) || !parseTanggal(tanggal2, &h2, &b2, &t2)) {
         return 0;
     }
     
-    if (y1 != y2) return (y1 > y2) ? 1 : -1;
-    if (m1 != m2) return (m1 > m2) ? 1 : -1;
-    if (d1 != d2) return (d1 > d2) ? 1 : -1;
+    if (t1 != t2) return (t1 > t2) ? 1 : -1;
+    if (b1 != b2) return (b1 > b2) ? 1 : -1;
+    if (h1 != h2) return (h1 > h2) ? 1 : -1;
     
     return 0;
 }
 
-// Check if date is in current month
-bool isDateInCurrentMonth(const char *date) {
-    int day, month, year;
-    if (!parseDate(date, &day, &month, &year)) {
+// Cek apakah tanggal ada di bulan ini
+bool adalahTanggalDiBulanIni(const char *tanggal) {
+    int hari, bulan, tahun;
+    if (!parseTanggal(tanggal, &hari, &bulan, &tahun)) {
         return false;
     }
     
-    time_t now = time(NULL);
-    struct tm *t = localtime(&now);
+    time_t sekarang = time(NULL);
+    struct tm *t = localtime(&sekarang);
     
-    int currentYear = t->tm_year + 1900;
-    int currentMonth = t->tm_mon + 1;
+    int tahunSekarang = t->tm_year + 1900;
+    int bulanSekarang = t->tm_mon + 1;
     
-    return (year == currentYear && month == currentMonth);
+    return (tahun == tahunSekarang && bulan == bulanSekarang);
 }
 
-// Add days to a date
-void addDays(char *buffer, int size, const char *date, int days) {
-    int d, m, y;
-    if (!parseDate(date, &d, &m, &y)) {
-        strncpy(buffer, date, size);
+// Tambahkan hari ke tanggal
+void tambahkanHari(char *buffer, int ukuran, const char *tanggal, int jumlahHari) {
+    int h, b, t;
+    if (!parseTanggal(tanggal, &h, &b, &t)) {
+        strncpy(buffer, tanggal, ukuran);
         return;
     }
     
-    d += days;
+    h += jumlahHari;
     
-    while (d > getDaysInMonth(m, y)) {
-        d -= getDaysInMonth(m, y);
-        m++;
-        if (m > 12) {
-            m = 1;
-            y++;
+    while (h > dapatkanJumlahHariDalamBulan(b, t)) {
+        h -= dapatkanJumlahHariDalamBulan(b, t);
+        b++;
+        if (b > 12) {
+            b = 1;
+            t++;
         }
     }
     
-    formatDate(buffer, size, d, m, y);
+    formatTanggal(buffer, ukuran, h, b, t);
 }

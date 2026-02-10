@@ -363,3 +363,146 @@ char* loadConfig(const char *key) {
     fclose(file);
     return NULL;
 }
+
+
+// Update rekam medis di CSV
+int updateRekamMedisInCSV(RekamMedis *rekamMedis, int id) {
+    RekamMedis *daftarRekamMedis;
+    int count = loadRekamMedisFromCSV(&daftarRekamMedis);
+    
+    FILE *file = fopen(CSV_REKAM_MEDIS, "w");
+    if (file == NULL) {
+        free(daftarRekamMedis);
+        return -1;
+    }
+    
+    int found = 0;
+    for (int i = 0; i < count; i++) {
+        if (daftarRekamMedis[i].id == id) {
+            daftarRekamMedis[i] = *rekamMedis;
+            found = 1;
+        }
+        
+        char keluhan[MAX_KELUHAN * 2], diagnosis[MAX_DIAGNOSIS * 2];
+        char catatan[MAX_CATATAN * 2], tindakan[MAX_TINDAKAN * 2];
+        
+        escapeCSV(keluhan, daftarRekamMedis[i].keluhan, sizeof(keluhan));
+        escapeCSV(diagnosis, daftarRekamMedis[i].diagnosis, sizeof(diagnosis));
+        escapeCSV(catatan, daftarRekamMedis[i].catatanDokter, sizeof(catatan));
+        escapeCSV(tindakan, daftarRekamMedis[i].tindakan, sizeof(tindakan));
+        
+        fprintf(file, "%d,%d,%s,%s,%s,%s,%s,%s\n",
+                daftarRekamMedis[i].id, daftarRekamMedis[i].idPasien,
+                daftarRekamMedis[i].tanggalKunjungan, keluhan, diagnosis,
+                catatan, tindakan, daftarRekamMedis[i].tanggalKontrol);
+    }
+    
+    fclose(file);
+    free(daftarRekamMedis);
+    return found ? 0 : -1;
+}
+
+// Delete rekam medis dari CSV
+int deleteRekamMedisFromCSV(int id) {
+    RekamMedis *daftarRekamMedis;
+    int count = loadRekamMedisFromCSV(&daftarRekamMedis);
+    
+    FILE *file = fopen(CSV_REKAM_MEDIS, "w");
+    if (file == NULL) {
+        free(daftarRekamMedis);
+        return -1;
+    }
+    
+    int found = 0;
+    for (int i = 0; i < count; i++) {
+        if (daftarRekamMedis[i].id == id) {
+            found = 1;
+            continue;
+        }
+        
+        char keluhan[MAX_KELUHAN * 2], diagnosis[MAX_DIAGNOSIS * 2];
+        char catatan[MAX_CATATAN * 2], tindakan[MAX_TINDAKAN * 2];
+        
+        escapeCSV(keluhan, daftarRekamMedis[i].keluhan, sizeof(keluhan));
+        escapeCSV(diagnosis, daftarRekamMedis[i].diagnosis, sizeof(diagnosis));
+        escapeCSV(catatan, daftarRekamMedis[i].catatanDokter, sizeof(catatan));
+        escapeCSV(tindakan, daftarRekamMedis[i].tindakan, sizeof(tindakan));
+        
+        fprintf(file, "%d,%d,%s,%s,%s,%s,%s,%s\n",
+                daftarRekamMedis[i].id, daftarRekamMedis[i].idPasien,
+                daftarRekamMedis[i].tanggalKunjungan, keluhan, diagnosis,
+                catatan, tindakan, daftarRekamMedis[i].tanggalKontrol);
+    }
+    
+    fclose(file);
+    free(daftarRekamMedis);
+    return found ? 0 : -1;
+}
+
+// Update resep di CSV
+int updateResepInCSV(Resep *resep, int id) {
+    Resep *daftarResep;
+    int count = loadResepFromCSV(&daftarResep);
+    
+    FILE *file = fopen(CSV_RESEP, "w");
+    if (file == NULL) {
+        free(daftarResep);
+        return -1;
+    }
+    
+    int found = 0;
+    for (int i = 0; i < count; i++) {
+        if (daftarResep[i].id == id) {
+            daftarResep[i] = *resep;
+            found = 1;
+        }
+        
+        char namaObat[MAX_NAMA_OBAT * 2], catatan[MAX_CATATAN_RESEP * 2];
+        escapeCSV(namaObat, daftarResep[i].namaObat, sizeof(namaObat));
+        escapeCSV(catatan, daftarResep[i].catatan, sizeof(catatan));
+        
+        fprintf(file, "%d,%d,%d,%s,%s,%s,%s,%s,%s,%s\n",
+                daftarResep[i].id, daftarResep[i].idPasien, daftarResep[i].idRekamMedis,
+                daftarResep[i].tanggalResep, namaObat, daftarResep[i].dosis,
+                daftarResep[i].frekuensi, daftarResep[i].durasi,
+                daftarResep[i].aturanPakai, catatan);
+    }
+    
+    fclose(file);
+    free(daftarResep);
+    return found ? 0 : -1;
+}
+
+// Delete resep dari CSV
+int deleteResepFromCSV(int id) {
+    Resep *daftarResep;
+    int count = loadResepFromCSV(&daftarResep);
+    
+    FILE *file = fopen(CSV_RESEP, "w");
+    if (file == NULL) {
+        free(daftarResep);
+        return -1;
+    }
+    
+    int found = 0;
+    for (int i = 0; i < count; i++) {
+        if (daftarResep[i].id == id) {
+            found = 1;
+            continue;
+        }
+        
+        char namaObat[MAX_NAMA_OBAT * 2], catatan[MAX_CATATAN_RESEP * 2];
+        escapeCSV(namaObat, daftarResep[i].namaObat, sizeof(namaObat));
+        escapeCSV(catatan, daftarResep[i].catatan, sizeof(catatan));
+        
+        fprintf(file, "%d,%d,%d,%s,%s,%s,%s,%s,%s,%s\n",
+                daftarResep[i].id, daftarResep[i].idPasien, daftarResep[i].idRekamMedis,
+                daftarResep[i].tanggalResep, namaObat, daftarResep[i].dosis,
+                daftarResep[i].frekuensi, daftarResep[i].durasi,
+                daftarResep[i].aturanPakai, catatan);
+    }
+    
+    fclose(file);
+    free(daftarResep);
+    return found ? 0 : -1;
+}

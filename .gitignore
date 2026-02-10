@@ -1,0 +1,37 @@
+# Build files
+build/
+bin/
+*.o
+*.exe
+
+# Data files (optional - uncomment jika tidak ingin commit data)
+# data/*.csv
+
+# IDE files
+.vscode/
+.idea/
+*.cbp
+*.depend
+*.layout
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*~
+
+# Log files
+*.log
+*_error.txt
+*_log.txt
+
+# Setup scripts (sudah tidak diperlukan)
+setup_*.ps1
+setup_*.sh
+
+# File perancangan (tidak untuk dipush)
+RANCANGAN_PROJECT.txt
+SUMMARY_OPTIMIZATION.md

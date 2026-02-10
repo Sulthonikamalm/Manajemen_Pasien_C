@@ -4,16 +4,16 @@
 #include <time.h>
 #include <stdbool.h>
 
-// Date utility functions
-void getCurrentDate(char *buffer, int size);
-void formatDate(char *buffer, int size, int day, int month, int year);
-bool parseDate(const char *dateStr, int *day, int *month, int *year);
-int calculateAge(const char *birthDate);
-bool isValidDate(int day, int month, int year);
-bool isLeapYear(int year);
-int getDaysInMonth(int month, int year);
-int compareDates(const char *date1, const char *date2);
-bool isDateInCurrentMonth(const char *date);
-void addDays(char *buffer, int size, const char *date, int days);
+// Fungsi utilitas tanggal
+void dapatkanTanggalSekarang(char *buffer, int ukuran);
+void formatTanggal(char *buffer, int ukuran, int hari, int bulan, int tahun);
+bool parseTanggal(const char *stringTanggal, int *hari, int *bulan, int *tahun);
+int hitungUsia(const char *tanggalLahir);
+bool adalahTanggalValid(int hari, int bulan, int tahun);
+bool adalahTahunKabisat(int tahun);
+int dapatkanJumlahHariDalamBulan(int bulan, int tahun);
+int bandingkanTanggal(const char *tanggal1, const char *tanggal2);
+bool adalahTanggalDiBulanIni(const char *tanggal);
+void tambahkanHari(char *buffer, int ukuran, const char *tanggal, int jumlahHari);
 
 #endif

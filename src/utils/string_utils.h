@@ -3,17 +3,17 @@
 
 #include <stdbool.h>
 
-// String utility functions
-void strTrim(char *str);
-void strToLower(char *str);
-void strToUpper(char *str);
-void strCapitalize(char *str);
-bool strContains(const char *haystack, const char *needle);
-bool strStartsWith(const char *str, const char *prefix);
-bool strEndsWith(const char *str, const char *suffix);
-int strSplit(char *str, char delimiter, char **tokens, int maxTokens);
-void strReplace(char *str, char find, char replace);
-void strCopy(char *dest, const char *src, int maxLen);
-int strCompareIgnoreCase(const char *str1, const char *str2);
+// Fungsi utilitas string
+void rapikanString(char *str);
+void keHurufKecil(char *str);
+void keHurufBesar(char *str);
+void kapitalisasiKata(char *str);
+bool mengandungString(const char *teksUtama, const char *teksYangDicari);
+bool dimulaiDengan(const char *str, const char *awalan);
+bool diakhiriDengan(const char *str, const char *akhiran);
+int pisahkanString(char *str, char pemisah, char **token, int maksToken);
+void gantiKarakter(char *str, char cari, char ganti);
+void salinString(char *tujuan, const char *sumber, int maksPanjang);
+int bandingkanStringIgnoreCase(const char *str1, const char *str2);
 
 #endif

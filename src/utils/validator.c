@@ -4,21 +4,21 @@
 #include <ctype.h>
 #include <time.h>
 
-// Validate nama (min 3 char, max 50 char, tidak boleh kosong)
+// Validate nama (Pelonggaran untuk testing: min 1 char)
 bool validateNama(const char *nama) {
-    if (nama == NULL || strlen(nama) < 3 || strlen(nama) > 50) {
+    if (nama == NULL || strlen(nama) < 1) {
         return false;
     }
     return true;
 }
 
-// Validate NIK (harus 16 digit angka)
+// Validate NIK (Pelonggaran untuk testing: hanya cek angka, tidak wajib 16 digit)
 bool validateNIK(const char *nik) {
-    if (nik == NULL || strlen(nik) != 16) {
+    if (nik == NULL || strlen(nik) < 1) {
         return false;
     }
     
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; nik[i]; i++) {
         if (!isdigit((unsigned char)nik[i])) {
             return false;
         }
@@ -27,52 +27,35 @@ bool validateNIK(const char *nik) {
     return true;
 }
 
-// Validate telepon (10-13 digit, harus angka)
+// Validate telepon (Pelonggaran untuk testing: bebas panjang, asal angka/plus)
 bool validateTelepon(const char *telepon) {
-    if (telepon == NULL) return false;
-    
-    int len = strlen(telepon);
-    if (len < 10 || len > 13) return false;
-    
-    // Skip +62 prefix if exists
-    int start = 0;
-    if (telepon[0] == '+') {
-        if (len < 12 || len > 15) return false;
-        start = 1;
-    }
-    
-    for (int i = start; telepon[i]; i++) {
-        if (!isdigit((unsigned char)telepon[i])) {
-            return false;
-        }
-    }
-    
+    if (telepon == NULL || strlen(telepon) < 1) return false;
     return true;
 }
 
 // Validate tanggal (format DD/MM/YYYY, tidak boleh masa depan)
 bool validateTanggal(const char *tanggal) {
-    int day, month, year;
+    int hari, bulan, tahun;
     
-    if (!parseDate(tanggal, &day, &month, &year)) {
+    if (!parseTanggal(tanggal, &hari, &bulan, &tahun)) {
         return false;
     }
     
-    if (!isValidDate(day, month, year)) {
+    if (!adalahTanggalValid(hari, bulan, tahun)) {
         return false;
     }
     
-    // Check if not in future
-    time_t now = time(NULL);
-    struct tm *t = localtime(&now);
+    // Cek apakah tidak di masa depan
+    time_t sekarang = time(NULL);
+    struct tm *t = localtime(&sekarang);
     
-    int currentYear = t->tm_year + 1900;
-    int currentMonth = t->tm_mon + 1;
-    int currentDay = t->tm_mday;
+    int tahunSekarang = t->tm_year + 1900;
+    int bulanSekarang = t->tm_mon + 1;
+    int hariSekarang = t->tm_mday;
     
-    if (year > currentYear) return false;
-    if (year == currentYear && month > currentMonth) return false;
-    if (year == currentYear && month == currentMonth && day > currentDay) return false;
+    if (tahun > tahunSekarang) return false;
+    if (tahun == tahunSekarang && bulan > bulanSekarang) return false;
+    if (tahun == tahunSekarang && bulan == bulanSekarang && hari > hariSekarang) return false;
     
     return true;
 }
